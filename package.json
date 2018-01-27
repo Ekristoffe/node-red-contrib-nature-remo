@@ -1,0 +1,28 @@
+{
+  "name": "node-red-contrib-nature-remo",
+  "version": "0.1.0",
+  "description": "Node-RED Nature Remo Controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshinit test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masayoshikuroda/node-red-contrib-nature-remo.git"
+  },
+  "keywords": [
+    "node-red",
+    "natureremo",
+    "remo"
+  ],
+  "author": "Masayoshi Kuroda<kuroda.masayoshi@gmail.com>",
+  "license": "Apache",
+  "node-red": {
+    "nodes": {
+      "NatureRemo": "index.js"
+    }
+  },
+  "dependencies": {
+    "request": "^2.83.0"
+  }
+}
