@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    RED.nodes.registerType('nature-remo',{
+	category: 'IoT',
+	color: '#a6bbcf',
+	defaults: {
+	    name:       { value: "" },
+	    token:      { value: "" , required: true},
+	    appliances: { value: "" , required: true}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "light.png",
+	align: "right",
+        label: function() {
+            return this.name||"nature-remo";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="nature-remo">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+	<input type="text" id="node-input-name" placeholder="Name"><br/>
+	<label for="node-input-token"><i class="icon-tag"></i> Token</label>
+	<input type="text" id="node-input-token" placeholder="Token"><br/>
+        <label for="node-input-appliances"><i class="icon-file"></i> Appliances file(JSON)</label>
+        <input type="text" id="node-input-appliances" placeholder="Appliances">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="nature-remo">
+    <p>NatureRemo controller</p>
+</script>
