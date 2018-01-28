@@ -2,8 +2,6 @@
 
 Nature Remoのコントローラ
 
-## Nature Remo API
-
 ## 公式API
 
 https://developer.nature.global/ 
