@@ -16,7 +16,7 @@ http://home.nature.global/
 
 コマンドラインで以下のcurlコマンドを実行し、設定をJSONファイルとして保存する。
 
-$ curl -i "https://api.nature.global/1/appliances" -H "accept: application/json" -k --header "Authorization: Bearer $(TOKEN)" > appliances.json
+$ curl "https://api.nature.global/1/appliances" -H "accept: application/json" -k --header "Authorization: Bearer $(TOKEN)" > appliances.json
 
 ## 設定
 
