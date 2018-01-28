@@ -1,33 +1,66 @@
+<script type="text/x-red" data-template-name="nature-token">
+    <div class="form-row">
+        <label for="node-config-input-token"><i class="fa fa-key"></i> Token</label>
+        <input type="text" id="node-config-input-token">
+    </div>
+</script>
+
 <script type="text/javascript">
-    RED.nodes.registerType('nature-remo',{
-	category: 'IoT',
-	color: '#a6bbcf',
-	defaults: {
-	    name:       { value: "" },
-	    token:      { value: "" , required: true},
-	    appliances: { value: "" , required: true}
+    RED.nodes.registerType('nature-token', {
+	category: 'config',
+	credentials: {
+            token: { type: "text" }
+	},
+	label: function() {
+	    return this.credentials? this.credentials.token : 'token';
+	}
+    });
+</script>
+
+<script type="text/x-red" data-template-name="nature-remo">
+    <div class="form-row">
+	<label for="node-input-token"><i class="fa fa-key"></i> Token</label>
+	<input type="text" id="node-input-token" placeholder="Token">
+    </div>
+    <div class="form-row">
+        <label for="node-input-appliances"><i class="icon-file"></i> Appliances</label>
+        <input type="text" id="node-input-appliances" placeholder="Appliances">
+    </div>
+    <div class="form-row">
+	<label form="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('nature-remo', {
+        category: 'IoT',
+        color: '#a6bbcf',
+        defaults: {
+           name:       { value: "" },
+           token:      { type: "nature-token" , required: true },
+           appliances: { value: "" , required: true }
         },
-        inputs:1,
-        outputs:0,
+        inputs: 1,
+        outputs: 0,
         icon: "light.png",
-	align: "right",
+        align: "right",
         label: function() {
             return this.name||"nature-remo";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="nature-remo">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-	<input type="text" id="node-input-name" placeholder="Name"><br/>
-	<label for="node-input-token"><i class="icon-tag"></i> Token</label>
-	<input type="text" id="node-input-token" placeholder="Token"><br/>
-        <label for="node-input-appliances"><i class="icon-file"></i> Appliances file(JSON)</label>
-        <input type="text" id="node-input-appliances" placeholder="Appliances">
-    </div>
-</script>
-
 <script type="text/x-red" data-help-name="nature-remo">
     <p>NatureRemo controller</p>
+    <h3>Input</h3>
+    <dl class="message-properties">
+	<dt>payload<span class="property-type">string|json</span></dt>
+	<dd>json string. ex:</dd>
+<pre>
+{ 
+  "nickname": "TV",
+  "name": "Power"
+}
+</pre>
 </script>
