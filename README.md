@@ -22,3 +22,20 @@ $ curl -i "https://api.nature.global/1/appliances" -H "accept: application/json"
 
 - token: アクセストークン文字列を設定する
 - appliances: アプライアンス設定ファイルの絶対パスを指定する
+
+## Input
+
+jsonでコマンドを指定する
+
+{
+  "commands": [
+    { 
+      "nickname": "TV",
+      "name": "Power"
+    },
+    {
+      "nickname": "TV",
+      "name": "CH01"
+    }
+  ]
+}
