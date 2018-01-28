@@ -1,22 +1,48 @@
 var Fs = require('fs');
 var Request = require('request');
 
-function post_signal(signal_id, token) {
+function setTimeoutPromise(delay) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      resolve();
+  }, delay)});
+}
+
+function post_signal_promise(token, signal_id) {
   var options = {
     url: "https://api.nature.global/1/signals/" + signal_id + "/send",
     headers: { "Authorization": "Bearer " + token }
   }
-  Request.post(options, function(error, response, body) {
-    if (error) {
-      console.error('POST failed:', error);
-    }
+  return new Promise(function(resolve, reject) {
+    Request.post(options, function(error, response, body) {
+      if (error) {
+        console.error('POST failed:', error);
+	reject(error);
+      } else {
+        resolve();
+      }
+    });
   });
 }
 
-function get_signal_id(appliances, nickname, name) {
+function post_signals(token, signal_ids, delay) {
+  var promise = signal_ids.reduce(function(p, signal_id) {
+    return p.then(function() {
+      return post_signal_promise(token, signal_id)
+      .then(function() {
+	 return setTimeoutPromise(delay);
+      });
+    });
+  }, Promise.resolve());
+  promise.then(function() {
+    console.log("Done");
+  }).catch(function(error) {
+    console.error("HTTP error", error);
+  });
+}
+
+function get_signal_id(json, nickname, name) {
   var signal_id = ''
-  var file = Fs.readFileSync(appliances, 'utf8')
-  var json = JSON.parse(file)
   for (var i=0; i<json.length; i++) {
     if (json[i]['nickname'] != nickname) {
       continue
@@ -30,6 +56,19 @@ function get_signal_id(appliances, nickname, name) {
   return signal_id
 }
 
+function get_signal_ids(appliances, commands) {
+  var file = Fs.readFileSync(appliances, 'utf8')
+  var json = JSON.parse(file)
+
+  var signal_ids = [];
+  for(var i=0; i<commands.length; i++) {
+    var command = commands[i]
+    var signal_id = get_signal_id(json, command.nickname, command.name)
+    signal_ids.push(signal_id)
+  }
+  return signal_ids;
+}
+
 module.exports = function(RED) {
     function NatureTokenNode(config) {
 	RED.nodes.createNode(this, config);
@@ -41,11 +80,9 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.on('input', function(msg) {
-	    var nickname = msg.payload.nickname
-	    var name = msg.payload.name
-	    var signal_id = get_signal_id(config.appliances, nickname, name)
+	    var signal_ids = get_signal_ids(config.appliances, msg.payload.commands)
             var token = RED.nodes.getNode(config.token).credentials.token
-	    post_signal(signal_id, token)
+	    post_signals(token, signal_ids, config.delay)
         });
     }
 

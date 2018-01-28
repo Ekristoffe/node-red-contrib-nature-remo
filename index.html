@@ -27,6 +27,10 @@
         <input type="text" id="node-input-appliances" placeholder="Appliances">
     </div>
     <div class="form-row">
+	<label for="node-input-delay"><i class="icon-tag"></i> Delay</label>
+        <input type="text" id="node-input-delay" placeholder="Delay">
+    </div>
+    <div class="form-row">
 	<label form="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -39,7 +43,8 @@
         defaults: {
            name:       { value: "" },
            token:      { type: "nature-token" , required: true },
-           appliances: { value: "" , required: true }
+           appliances: { value: "" , required: true },
+	   delay:      { value: 100, required: true, validate:RED.validators.number() }
         },
         inputs: 1,
         outputs: 0,
@@ -58,9 +63,17 @@
 	<dt>payload<span class="property-type">string|json</span></dt>
 	<dd>json string. ex:</dd>
 <pre>
-{ 
-  "nickname": "TV",
-  "name": "Power"
+{
+  "commands": [
+    { 
+      "nickname": "TV",
+      "name": "Power"
+    },
+    {
+      "nickname": "TV",
+      "name": "CH01"
+    }
+  ]
 }
 </pre>
 </script>
