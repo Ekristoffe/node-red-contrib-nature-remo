@@ -4,7 +4,7 @@ Nature Remoのコントローラ
 
 ## Nature Remo API
 
-公式API
+## 公式API
 
 https://developer.nature.global/ 
 
@@ -22,5 +22,5 @@ $ curl -i "https://api.nature.global/1/appliances" -H "accept: application/json"
 
 ## 設定
 
-- token: token
-- appliances: appliances
+- token: アクセストークン文字列を設定する
+- appliances: アプライアンス設定ファイルの絶対パスを指定する
