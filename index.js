@@ -27,42 +27,36 @@ function post_signal_promise(token, signal_id) {
 }
 
 function post_signals_promise(token, signal_ids, delay) {
-    return  signal_ids.reduce(function(p, signal_id) {
-        return p.then(function() {
-            return post_signal_promise(token, signal_id)
-                .then(function() {
-	            return setTimeoutPromise(delay);
-                });
+    return new Promise(function(resolve, reject) {
+        var p = post_signal_promise(token, signal_ids[0]);
+	signal_ids.slice(1).forEach(function(signal_id) {
+	    p = p.then(() => setTimeoutPromise(delay));
+	    p = p.then(() => post_signal_promise(token, signal_id));
         });
-    }, Promise.resolve());
+        p.then(() => resolve());
+    });
 }
 
 function get_signal_id(json, nickname, name) {
     var signal_id = '';
-    for (var i=0; i<json.length; i++) {
-         if (json[i]['nickname'] != nickname) {
-             continue;
-         }
-         for(var j=0; j<json[i]['signals'].length; j++) {
-             if (json[i]['signals'][j]['name'] == name) {
-                 signal_id = json[i]['signals'][j]['id'];
-             }
-         }
-    }
+    json.filter(function(appliance) {
+        return appliance['nickname'] == nickname;
+    }).forEach(function(appliance) {
+        appliance['signals'].filter(function(signal) {
+	    return signal['name'] == name;
+	}).forEach(function(signal) {
+	    signal_id = signal['id'];
+	});
+    })
     return signal_id
 }
 
 function get_signal_ids(appliances, commands) {
     var file = Fs.readFileSync(appliances, 'utf8');
     var json = JSON.parse(file);
-
-    var signal_ids = [];
-    for(var i=0; i<commands.length; i++) {
-        var command = commands[i];
-        var signal_id = get_signal_id(json, command.nickname, command.name);
-        signal_ids.push(signal_id);
-    }
-    return signal_ids;
+    return  commands.map(function(command) {
+        return get_signal_id(json, command.nickname, command.name);
+    });
 }
 
 module.exports = function(RED) {
